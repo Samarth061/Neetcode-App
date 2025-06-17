@@ -1,47 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeetCode Problem Search</title>
     <link rel="stylesheet" href="styles.css">
-
 </head>
-
-<body>
+<body data-theme="dark">
     <div class="container">
         <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <svg class="theme-icon" id="themeIcon" viewBox="0 0 24 24">
+                    <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+                </svg>
+                <span id="themeText">Light</span>
+            </button>
             <h1>🔍 LeetCode Search</h1>
             <p>Find LeetCode problems with complexity analysis and optimal solutions</p>
         </div>
 
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number" id="totalProblems">150</span>
-                <span class="stat-label">Problems</span>
+        <div class="stats-section">
+            <div class="animated-banner">
+                <div class="code-rain">
+                    <div class="code-line">const solve = (problem) => {</div>
+                    <div class="code-line">  return optimal(solution);</div>
+                    <div class="code-line">};</div>
+                </div>
+                <div class="floating-elements">
+                    <div class="float-element">💡</div>
+                    <div class="float-element">🚀</div>
+                    <div class="float-element">⚡</div>
+                    <div class="float-element">🎯</div>
+                </div>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" id="easyCount">50</span>
-                <span class="stat-label">Easy</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="mediumCount">75</span>
-                <span class="stat-label">Medium</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="hardCount">25</span>
-                <span class="stat-label">Hard</span>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalProblems">150</span>
+                    <span class="stat-label">Problems</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="easyCount">50</span>
+                    <span class="stat-label">Easy</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="mediumCount">75</span>
+                    <span class="stat-label">Medium</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="hardCount">25</span>
+                    <span class="stat-label">Hard</span>
+                </div>
             </div>
         </div>
 
         <div class="search-container">
             <div class="search-box">
-                <input type="text" id="searchInput"
-                    placeholder="Search for LeetCode problems (e.g., 'Two Sum', 'Binary Tree', 'Dynamic Programming')">
+                <input type="text" id="searchInput" placeholder="Search for LeetCode problems (e.g., 'Two Sum', 'Binary Tree', 'Dynamic Programming')">
                 <button class="search-btn" onclick="searchProblems()">Search</button>
             </div>
-
+            
             <div class="filters">
                 <div class="filter-group">
                     <label>Difficulty</label>
@@ -68,7 +86,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="results-container" id="resultsContainer">
             <!-- Results will be populated here -->
         </div>
@@ -76,5 +94,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>

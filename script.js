@@ -192,6 +192,93 @@ const leetcodeProblems = [
 
 let filteredProblems = [...leetcodeProblems];
 
+// Theme functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeText = document.getElementById('themeText');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (body.getAttribute('data-theme') === 'dark') {
+        // Switch to light theme
+        body.removeAttribute('data-theme');
+        themeText.textContent = 'Dark';
+        // Sun icon for light theme
+        themeIcon.innerHTML = '<path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/>';
+    } else {
+        // Switch to dark theme
+        body.setAttribute('data-theme', 'dark');
+        themeText.textContent = 'Light';
+        // Moon icon for dark theme
+        themeIcon.innerHTML = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>';
+    }
+}
+
+// Initialize with dark theme
+function initializeTheme() {
+    const themeText = document.getElementById('themeText');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    // Set dark theme as default
+    document.body.setAttribute('data-theme', 'dark');
+    themeText.textContent = 'Light';
+    // Moon icon for dark theme
+    themeIcon.innerHTML = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>';
+}
+
+// Copy functionality
+function copyToClipboard(text, button) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalContent = button.innerHTML;
+        const isComplexityBtn = button.classList.contains('copy-complexities-btn');
+        
+        button.classList.add('copied');
+        
+        if (isComplexityBtn) {
+            button.innerHTML = `
+                <svg class="check-icon" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+                Copied!
+            `;
+        } else {
+            button.innerHTML = `
+                <svg class="check-icon" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+            `;
+        }
+        
+        setTimeout(() => {
+            button.classList.remove('copied');
+            button.innerHTML = originalContent;
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        // Fallback for browsers that don't support clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        button.classList.add('copied');
+        setTimeout(() => {
+            button.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+function copyUrl(url, button) {
+    copyToClipboard(url, button);
+}
+
+function copyComplexities(timeComplexity, spaceComplexity, button) {
+    const complexityText = `Time: ${timeComplexity}\nSpace: ${spaceComplexity}`;
+    copyToClipboard(complexityText, button);
+}
+
+// Search functionality
 function searchProblems() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const difficultyFilter = document.getElementById('difficultyFilter').value;
@@ -199,7 +286,7 @@ function searchProblems() {
 
     filteredProblems = leetcodeProblems.filter(problem => {
         const matchesSearch = problem.title.toLowerCase().includes(searchTerm) ||
-            problem.topics.some(topic => topic.includes(searchTerm));
+                            problem.topics.some(topic => topic.includes(searchTerm));
         const matchesDifficulty = !difficultyFilter || problem.difficulty === difficultyFilter;
         const matchesTopic = !topicFilter || problem.topics.includes(topicFilter);
 
@@ -209,77 +296,137 @@ function searchProblems() {
     displayResults();
 }
 
+// Display results
 function displayResults() {
     const container = document.getElementById('resultsContainer');
-
+    
     if (filteredProblems.length === 0) {
         container.innerHTML = `
-                    <div class="no-results">
-                        <h3>No problems found</h3>
-                        <p>Try adjusting your search terms or filters</p>
-                    </div>
-                `;
+            <div class="no-results">
+                <h3>No problems found</h3>
+                <p>Try adjusting your search terms or filters</p>
+            </div>
+        `;
         return;
     }
 
     container.innerHTML = filteredProblems.map(problem => `
-                <div class="problem-card ${problem.difficulty}">
-                    <div class="problem-header">
-                        <div>
-                            <div class="problem-title">${problem.title}</div>
-                            <div class="problem-number">#${problem.id}</div>
-                        </div>
-                        <div class="difficulty-badge ${problem.difficulty}">
-                            ${problem.difficulty}
-                        </div>
+        <div class="problem-card ${problem.difficulty}">
+            <div class="problem-header">
+                <div class="problem-info">
+                    <div class="problem-title">${problem.title}</div>
+                    <div class="problem-number">#${problem.id}</div>
+                </div>
+                <div class="header-actions">
+                    <div class="difficulty-badge ${problem.difficulty}">
+                        ${problem.difficulty}
                     </div>
-                    
-                    <div class="complexity-info">
-                        <div class="complexity-item">
-                            <div class="complexity-label">Time Complexity</div>
-                            <div class="complexity-value">${problem.timeComplexity}</div>
-                        </div>
-                        <div class="complexity-item">
-                            <div class="complexity-label">Space Complexity</div>
-                            <div class="complexity-value">${problem.spaceComplexity}</div>
-                        </div>
+                    <button class="copy-url-btn" onclick="copyUrl('${problem.url}', this)" title="Copy problem URL">
+                        <svg class="copy-icon" viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="complexity-section">
+                <div class="complexity-header">
+                    <span class="complexity-title">Complexity Analysis</span>
+                    <button class="copy-complexities-btn" onclick="copyComplexities('${problem.timeComplexity}', '${problem.spaceComplexity}', this)" title="Copy both complexities">
+                        <svg class="copy-icon" viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+                <div class="complexity-info">
+                    <div class="complexity-item">
+                        <div class="complexity-label">Time Complexity</div>
+                        <div class="complexity-value">${problem.timeComplexity}</div>
                     </div>
-                    
-                    <div class="problem-links">
-                        <a href="${problem.url}" target="_blank" class="link-btn leetcode-btn">
-                            View Problem
-                        </a>
-                        <a href="${problem.solutionUrl}" target="_blank" class="link-btn solution-btn">
-                            Optimal Solution
-                        </a>
+                    <div class="complexity-item">
+                        <div class="complexity-label">Space Complexity</div>
+                        <div class="complexity-value">${problem.spaceComplexity}</div>
                     </div>
                 </div>
-            `).join('');
+            </div>
+            
+            <div class="problem-links">
+                <a href="${problem.url}" target="_blank" class="link-btn leetcode-btn">
+                    <svg class="copy-icon" viewBox="0 0 24 24">
+                        <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+                    </svg>
+                    View Problem
+                </a>
+                <a href="${problem.solutionUrl}" target="_blank" class="link-btn solution-btn">
+                    <svg class="copy-icon" viewBox="0 0 24 24">
+                        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                    </svg>
+                    Solution
+                </a>
+            </div>
+        </div>
+    `).join('');
 }
-
-// Add event listeners
-document.getElementById('searchInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        searchProblems();
-    }
-});
-
-document.getElementById('difficultyFilter').addEventListener('change', searchProblems);
-document.getElementById('topicFilter').addEventListener('change', searchProblems);
-
-// Initialize with all problems
-displayResults();
 
 // Update stats
 function updateStats() {
+    if (leetcodeProblems.length === 0) return;
+    
     const easy = leetcodeProblems.filter(p => p.difficulty === 'easy').length;
     const medium = leetcodeProblems.filter(p => p.difficulty === 'medium').length;
     const hard = leetcodeProblems.filter(p => p.difficulty === 'hard').length;
-
+    
     document.getElementById('totalProblems').textContent = leetcodeProblems.length;
     document.getElementById('easyCount').textContent = easy;
     document.getElementById('mediumCount').textContent = medium;
     document.getElementById('hardCount').textContent = hard;
 }
 
-updateStats();
+// Event listeners
+function initializeEventListeners() {
+    // Search input
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProblems();
+            }
+        });
+    }
+
+    // Filter dropdowns
+    const difficultyFilter = document.getElementById('difficultyFilter');
+    const topicFilter = document.getElementById('topicFilter');
+    
+    if (difficultyFilter) {
+        difficultyFilter.addEventListener('change', searchProblems);
+    }
+    
+    if (topicFilter) {
+        topicFilter.addEventListener('change', searchProblems);
+    }
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTheme();
+    initializeEventListeners();
+    updateStats();
+    displayResults();
+});
+
+// Also initialize if script loads after DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeTheme();
+        initializeEventListeners();
+        updateStats();
+        displayResults();
+    });
+} else {
+    initializeTheme();
+    initializeEventListeners();
+    updateStats();
+    displayResults();
+}
