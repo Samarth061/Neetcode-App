@@ -18,19 +18,26 @@ A sleek, responsive web app to search and explore LeetCode problems with filters
 2. Add problems in `script.js` under `leetcodeProblems` array
 3. Open `index.html` and start searching!
 
-## 🛠️ Add a Problem
+## 🔧 Customization
 
-```js
-{
-  id: 1,
-  title: "Two Sum",
-  difficulty: "easy",
-  timeComplexity: "O(n)",
-  spaceComplexity: "O(n)",
-  url: "https://leetcode.com/problems/two-sum/",
-  solutionUrl: "https://github.com/your-repo/solution",
-  topics: ["array", "hash-table"]
-}
+### Adding Problems
+
+Add problems to the leetcodeProblems array in script.js:
+
+```javascript
+const leetcodeProblems = [
+  {
+    id: 1,
+    title: "Two Sum",
+    difficulty: "easy",
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(n)",
+    url: "https://leetcode.com/problems/two-sum/",
+    solutionUrl: "https://github.com/your-repo/solution",
+    topics: ["array", "hash-table"],
+  },
+  // Add more problems here...
+];
 ```
 
 ## 🧠 Supported Topics
